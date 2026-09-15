@@ -1,0 +1,104 @@
+body {
+    font-family: Roboto, sans-serif;
+}
+
+header {
+    border: 3px solid gold;
+    background-color: yellow;
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+#plus {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: yellow;
+}
+
+header img {
+    display: inline;
+    width: 15%;
+    vertical-align: middle;
+    margin: 0.5rem;
+}
+
+header h1 {
+    display: inline;
+    position: relative;
+    vertical-align: middle;
+    text-align: left;
+    margin: 0.5rem;
+    font-size: 5rem;
+    font-family: DynaPuff;
+}
+
+header div {
+    display: inline;
+    position: relative;
+    vertical-align: middle;
+    margin: 0.5rem;
+}
+
+#section_sx {
+    width: 25%;
+    border: 3px solid gold;
+    margin: 0.5rem;
+}
+
+#section_sx a {
+    display: block;
+    margin: 0.5rem;
+}
+
+#section_dx {
+    width: 75%;
+    border: 3px solid gold;
+    margin: 0.5rem;
+}
+
+.photo {
+    width: 25%;
+    margin: 0.5rem;
+}
+
+.sectionclass {
+    width: 75%;
+    margin: 0.5rem;
+    background-color:yellow;
+    padding: 0.5rem;
+}
+
+.profile_photo {
+    margin: 0.5rem;
+    width: 10%;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+.profile {
+    margin: 0.5rem;
+    font-size: 1.5rem;
+    vertical-align: midd;
+}
+
+.days {
+    margin: 0.5rem;
+    text-align: right;
+}
+
+.paragraph {
+    display: block;
+    margin: 0.5rem;
+}
+
+#section_dx hr {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    height: 1px;
+    background-color: black;
+}

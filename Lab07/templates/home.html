@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block nav %} 
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-light">Chi siamo</a>
+{% endblock %}
+
+{% block content %}        
+    <div class="row p-2">
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+            <div class="menu main d-flex flex-wrap rounded-3 shadow pt-2 px-2">
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12" onclick="location.href='#'">Oggi</button>
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12 active" onclick="location.href='#'">Questa settimana</button>
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12" onclick="location.href='#'">Questo mese</button>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-9">
+            {% for post in posts %}
+                <div class="main p-2 bg-body-tertiary rounded-3 shadow">
+                    <article class="articleclass col-12 d-flex flex-wrap">
+                        <div class="photo col-sm-12 col-md-6 col-lg-3">
+                            <a href="{{ url_for('post', post_id=post.id) }}" class="d-flex text-decoration-none">
+                                <img class="photo" src="{{ post.immagine_post }}" alt="post_photo">
+                            </a>
+                        </div>
+                        <section class="sectionclass col-sm-12 col-md-6 col-lg-9">
+                            <div>
+                                <div class="profile_info">
+                                    <a class="profile text-decoration-none" href="{{ url_for('user', username=post.username) }}">
+                                        <img class="profile_photo" src="{{ post.immagine_profilo }}" alt="profile_photo">
+                                    </a>
+                                    <a class="profile text-decoration-none" href="{{ url_for('user', username=post.username) }}">@{{ post.username }}</a>
+                                </div>
+                                <p class="days">{{ post.data_pubblicazione|format_date }}</p>
+                            </div>
+                            <p class="paragraph mb-0">{{ post.testo }}</p>
+                            <p class="hashtags mb-0">
+                                {% for hashtag in post.hashtags %}
+                                    <a href="#" class="btn btn-warning mb-1">#{{ hashtag }}</a>
+                                {% endfor %}
+                            </p>
+                        </section>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <button id="plus" type="button" class="plus btn btn-lg rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">+</button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Crea un nuovo post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new_post" action="/new_post" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="username" class="col-form-label">Username</label>
+                            <select class="form-select" id="username" name="username" required>
+                                <option value="" disabled selected>Seleziona un'opzione</option>
+                                {% for user in p_users %}
+                                    <option value="{{ user.username }}">@{{ user.username }}</option>
+                                {% endfor %}
+                            </select>  
+                        </div>
+                        <div class="mb-3">
+                            <label for="testo" class="col-form-label">Cosa mi porti di nuovo?</label>
+                            <textarea class="form-control" id="testo" name="testo" placeholder="Inserisci un testo per il tuo post" minlength="30" maxlength="200" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="immagine_post" class="col-form-label">Aggiungi un'immagine, se vuoi</label>
+                            <input type="file" class="form-control" id="immagine_post" name="immagine_post" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label for="data_pubblicazione" class="col-form-label">Seleziona una data</label>
+                            <input type="date" class="form-control" id="data_pubblicazione" name="data_pubblicazione" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hashtag-input" class="col-form-label">Aggiungi hashtag</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="hashtag-input" name="hashtags" placeholder="Inserisci un hashtag">
+                                <button type="button" class="btn btn-warning" id="add-hashtag">Aggiungi</button>
+                            </div>
+                            <div id="hashtag-list" class="mt-2">
+                                <!--Gli hashtag aggiunti appariranno qui-->
+                            </div>
+                            <input type="hidden" id="hashtags" name="hashtags">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-outline-light" data-bs-dismiss="modal">Chiudi</button>
+                            <button type="submit" class="btn btn-warning">Crea post</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const addHashtagButton = document.getElementById("add-hashtag");
+            const hashtagInput = document.getElementById("hashtag-input");
+            const hashtagList = document.getElementById("hashtag-list");
+            const hiddenHashtagsField = document.getElementById("hashtags");
+
+            // Funzione per aggiornare il campo nascosto con gli hashtag
+            function updateHiddenField() {
+                const hashtags = Array.from(hashtagList.children).map(
+                    (tag) => tag.textContent.replace("✖", "").trim()
+                );
+                hiddenHashtagsField.value = hashtags.join(",");
+            }
+
+            // Aggiungi un hashtag
+            addHashtagButton.addEventListener("click", function () {
+                const hashtag = hashtagInput.value.trim();
+                if (hashtag) {
+                    const hashtagElement = document.createElement("span");
+                    hashtagElement.className = "badge bg-warning text-dark me-2";
+                    hashtagElement.textContent = hashtag;
+
+                    // Aggiungi pulsante per rimuovere l'hashtag
+                    const removeButton = document.createElement("span");
+                    removeButton.className = "ms-1 text-danger";
+                    removeButton.textContent = "✖";
+                    removeButton.style.cursor = "pointer";
+                    removeButton.addEventListener("click", function () {
+                        hashtagElement.remove();
+                        updateHiddenField();
+                    });
+
+                    hashtagElement.appendChild(removeButton);
+                    hashtagList.appendChild(hashtagElement);
+
+                    // Pulisci il campo input e aggiorna il campo nascosto
+                    hashtagInput.value = "";
+                    updateHiddenField();
+                }
+            });
+
+            // Aggiorna il campo nascosto quando il form viene inviato
+            const form = document.getElementById("new_post");
+            form.addEventListener("submit", function () {
+                updateHiddenField();
+            });
+        });
+    </script>
+{% endblock %}

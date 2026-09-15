@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block nav %} 
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-light">Chi siamo</a>
+{% endblock %}
+
+{% block content %}        
+    <div class="row p-2">
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+            <div class="menu main d-flex flex-wrap rounded-3 shadow pt-2 px-2">
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12" onclick="location.href='#'">Oggi</button>
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12 active" onclick="location.href='#'">Questa settimana</button>
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12" onclick="location.href='#'">Questo mese</button>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-9">
+            {% for post in posts %}
+                <div class="main p-2 bg-body-tertiary rounded-3 shadow">
+                    <article class="articleclass col-12 d-flex flex-wrap">
+                        <div class="photo col-sm-12 col-md-6 col-lg-3">
+                            <a href="{{ url_for('post', post_id=post.id) }}" class="d-flex text-decoration-none">
+                                <img class="photo" src="{{ post.immagine_post }}" alt="post_photo">
+                            </a>
+                        </div>
+                        <section class="sectionclass col-sm-12 col-md-6 col-lg-9">
+                            <div>
+                                <div class="profile_info">
+                                    <img class="profile_photo" src="{{ post.immagine_profilo }}" alt="profile_photo">
+                                    <a class="profile text-decoration-none" href="{{ url_for('user', username=post.username) }}">@{{ post.username }}</a>
+                                </div>
+                                <p class="days">{{ post.data_pubblicazione }}</p>
+                            </div>
+                            <p class="paragraph mb-0">{{ post.testo }}</p>
+                            <p class="hashtags mb-0">
+                                {% for hashtag in post.hashtags %}
+                                    <a href="#" class="btn btn-warning mb-1">#{{ hashtag }}</a>
+                                {% endfor %}
+                            </p>
+                        </section>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!--<a class="btn btn-warning rounded-circle text-white" href="#" role="button"><h1>+</h1></a>-->
+    <div id="plus"><a href="#"><a href="#"><i class="bi bi-plus-lg"></i></a></a></div>
+{% endblock %}

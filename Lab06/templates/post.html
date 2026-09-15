@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Post{% endblock %}
+{% block nav %}
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-light">Chi siamo</a>
+{% endblock %}
+
+{% block content %}
+    <div class="main p-2 bg-body-tertiary rounded-3 shadow mx-4">
+        <article class="articleclass col-12 d-flex flex-wrap">
+            <img class="photo col-sm-12 col-md-6 col-lg-4" src="{{ p_post.immagine_post }}" alt="post_photo">
+            <section class="sectionclass col-sm-12 col-md-6 col-lg-8">
+                <div>
+                    <div class="profile_info">
+                        <img class="profile_photo" src="{{ p_post.immagine_profilo }}" alt="profile_photo">
+                        <a class="profile" href="{{ url_for('user', username=p_post.username) }}">@{{ p_post.username }}</a>
+                    </div>
+                    <p class="days">{{ p_post.data_pubblicazione }}</p>
+                </div>
+                <p class="paragraph mb-0">{{ p_post.testo }}</p>
+                <p class="hashtags mb-0">
+                    {% for hashtag in p_post.hashtags %}
+                        <a href="#" class="btn btn-warning mb-1">#{{ hashtag }}</a>
+                    {% endfor %}
+                </p>
+            </section>
+        </article>
+    </div>
+{% endblock %}

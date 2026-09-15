@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Registrati{% endblock %}
+
+{% block nav %} 
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-light">Chi siamo</a>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12 d-flex justify-content-center align-items-center">
+        <form class="form-signup col-10 col-md-4 mb-3" id="form-signup" method="POST" action="{{ url_for('register_user') }}" enctype="multipart/form-data"> 
+            <img class="mb-4" src="/static/images/logo_no_sfondo.PNG" alt="logo" height="57"> 
+            <h1 class="h3 mb-3 fw-normal">Registrati</h1> 
+            <label for="email">Email</label> 
+            <input type="email" class="form-control mb-2" id="email" placeholder="name@example.com" name="email" required> 
+            <label for="password">Password</label> 
+            <input type="password" class="form-control mb-2" id="password" placeholder="Password" name="password" required> 
+            <label for="username">Username</label>
+            <input type="text" class="form-control mb-2" id="username" placeholder="Username" name="username" required>
+            <label for="immagine_profilo" class="col-form-label">Aggiungi la tua immagine di profilo</label>
+            <input type="file" class="form-control mb-2" id="immagine_profilo" name="immagine_profilo" accept="image/*" required>
+            <label for="nome">Nome</label>
+            <input type="text" class="form-control mb-2" id="nome" placeholder="Nome" name="nome" required>
+            <label for="bio">Bio (Facoltativa)</label>
+            <input type="text" class="form-control mb-2" id="bio" placeholder="Racconta agli altri qualcosa su di te" name="bio">
+            <label for="hashtags" class="col-form-label">Aggiungi hashtags (Facoltativo)</label>
+            <input type="text" class="form-control mb-2" id="hashtags" name="hashtags" placeholder="hashtag1, hashtag2, hashtag3">
+            
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" value="remember-me" id="checkDefault"> 
+                    <label class="form-check-label" for="checkDefault">Remember me</label> 
+            </div> 
+            <button class="btn btn-warning w-100 py-2" type="submit">Registrati</button> 
+        </form>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert-{{ category }} alert-dismissible fade show col-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{% endblock %}

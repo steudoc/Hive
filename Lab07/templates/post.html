@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Post{% endblock %}
+{% block nav %}
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-light">Chi siamo</a>
+{% endblock %}
+
+{% block content %}
+    <div class="main p-2 bg-body-tertiary rounded-3 shadow mx-4">
+        <article class="articleclass col-12 d-flex flex-wrap">
+            <img class="photo col-sm-12 col-md-6 col-lg-4" src="{{ p_post.immagine_post }}" alt="post_photo">
+            <section class="sectionclass col-sm-12 col-md-6 col-lg-8">
+                <div>
+                    <div class="profile_info">
+                        <img class="profile_photo" src="{{ p_post.immagine_profilo }}" alt="profile_photo">
+                        <a class="profile" href="{{ url_for('user', username=p_post.username) }}">@{{ p_post.username }}</a>
+                    </div>
+                    <p class="days">{{ p_post.data_pubblicazione|format_date }}</p>
+                </div>
+                <p class="paragraph mb-0">{{ p_post.testo }}</p>
+                <p class="hashtags mb-0">
+                    {% for hashtag in p_post.hashtags %}
+                        <a href="#" class="btn btn-warning mb-1">#{{ hashtag }}</a>
+                    {% endfor %}
+                </p>
+            </section>
+        </article>
+    </div>
+    <form id="form_comment" class="p-4 p-md-5 border rounded-3 mx-4 mb-2 shadow-sm" method="POST" enctype="multipart/form-data" action="/new_comment/{{ p_post.id }}">
+        <h4 class="mb-3">Aggiungi un commento</h4>
+        <div class="mb-3 d-flex flex-wrap justify-content-between">
+            <div class="col-12 col-lg-6">
+                <label for="username" class="col-form-label">Username</label>
+                <select class="form-select" id="username" name="username" required>
+                    <option value="" selected disabled>Seleziona un'opzione</option>
+                    <option value="anonimo">Anonimo</option>
+                    {% for user in p_users %}
+                        <option value="{{ user.username }}">@{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-lg-5">
+                <label for="immagine_commento" class="col-form-label">Aggiungi un'immagine, se vuoi</label>
+                <input type="file" class="form-control" id="immagine_commento" name="immagine_commento" accept="image/*">
+            </div>
+        </div>
+        <div class="mb-3 d-flex flex-wrap justify-content-between">
+            <div class="col-12 col-lg-6">
+                <label for="testo" class="col-form-label">Cosa ne pensi?</label>
+                <textarea class="form-control" id="testo" name="testo" placeholder="Inserisci il testo del tuo commento" required></textarea>
+            </div>
+            <div class="col-12 col-lg-5">
+                <label for="valutazione" class="col-form-label">Valutazione</label>
+                <input type="range" class="form-range" min="0" max="5" step="1" id="valutazione" name="valutazione">
+                <span id="range-value" class="ms-2">3</span> <!-- Valore iniziale -->
+            </div>
+        </div>
+        <button type="reset" class="btn btn-outline-light" data-bs-dismiss="modal">Cancella</button>
+        <button type="submit" class="btn btn-warning">Pubblica commento</button>
+    </form>
+    <div class="col-12 d-flex flex-wrap justify-content-center px-4">
+        {% for comment in p_post.commenti %}
+            <div class="main col-sm-12 col-lg-9 p-2 bg-body-tertiary rounded-3 shadow">
+                <article class="articleclass col-12 d-flex flex-wrap">
+                    <section class="sectionclass col-6 col-md-6 col-lg-8">
+                        <div class="justify-content-between align-items-center">
+                            <div class="profile_info col-6">
+                                <img class="profile_photo" src="{{ comment.immagine_profilo }}" alt="profile_photo">
+                                <a class="profile" href="{{ url_for('user', username=comment.username) }}">@{{ comment.username }}</a>
+                            </div>
+                            <div class="star col-6">
+                                {% for i in range(comment.valutazione) %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <p class="paragraph mb-0">{{ comment.testo }}</p>
+                    </section>
+                    <img class="photo col-5 col-md-5 col-lg-3" src="{{ comment.immagine_commento }}" alt="comment_photo">
+                </article>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rangeInput = document.getElementById("valutazione");
+            const rangeValue = document.getElementById("range-value");
+
+            // Aggiorna il valore del range in tempo reale
+            rangeInput.addEventListener("input", function () {
+                rangeValue.textContent = rangeInput.value;
+            });
+
+            // Imposta il valore iniziale del range
+            rangeValue.textContent = rangeInput.value;
+        });
+    </script>
+{% endblock %}

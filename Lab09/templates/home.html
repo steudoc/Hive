@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block nav %} 
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-light">Chi siamo</a>
+{% endblock %}
+
+{% block content %}        
+    <div class="row p-2">
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+            <div class="menu main d-flex flex-wrap rounded-3 shadow pt-2 px-2">
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12 {% if active_filter == 'oggi' %}active{% endif %}" onclick="location.href='/post/oggi'">Oggi</button>
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12 {% if active_filter == 'ultimi_7_giorni' %}active{% endif %}" onclick="location.href='/post/ultimi_7_giorni'">Questa settimana</button>
+                <button type="button" class="btn btn-outline-warning col-sm-3 col-lg-12 {% if active_filter == 'ultimi_30_giorni' %}active{% endif %}" onclick="location.href='/post/ultimi_30_giorni'">Questo mese</button>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-9">
+            {% for post in posts %}
+                <div class="main p-2 bg-body-tertiary rounded-3 shadow">
+                    <article class="articleclass col-12 d-flex flex-wrap">
+                        <div class="photo col-sm-12 col-md-6 col-lg-3">
+                            <a href="{{ url_for('post', post_id=post.id) }}" class="d-flex text-decoration-none">
+                                <img class="photo" src="{{ post.immagine_post }}" alt="post_photo">
+                            </a>
+                        </div>
+                        <section class="sectionclass col-sm-12 col-md-6 col-lg-9">
+                            <div>
+                                <div class="profile_info">
+                                    <a class="profile text-decoration-none" href="{{ url_for('user', username=post.username) }}">
+                                        <img class="profile_photo" src="{{ post.immagine_profilo }}" alt="profile_photo">
+                                    </a>
+                                    <a class="profile text-decoration-none" href="{{ url_for('user', username=post.username) }}">@{{ post.username }}</a>
+                                </div>
+                                <p class="days">{{ post.data_pubblicazione|format_date }}</p>
+                            </div>
+                            <p class="paragraph mb-0">{{ post.testo }}</p>
+                            <p class="hashtags mb-0">
+                                {% if post.hashtags %}
+                                    {% for hashtag in post.hashtags.split(',') %}
+                                        <a href="{{ url_for('hashtags', hashtag=hashtag.strip()) }}" class="btn btn-warning mb-1">#{{ hashtag.strip() }}</a>
+                                    {% endfor %}
+                                {% endif %}
+                            </p>
+                        </section>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if current_user.is_authenticated %}
+        <button id="plus" type="button" class="plus btn btn-lg rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">+</button>
+    {% endif %}
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Crea un nuovo post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new_post" action="/new_post" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="testo" class="col-form-label">Cosa mi porti di nuovo?</label>
+                            <textarea class="form-control" id="testo" name="testo" placeholder="Inserisci un testo per il tuo post" minlength="30" maxlength="200" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="immagine_post" class="col-form-label">Aggiungi un'immagine, se vuoi</label>
+                            <input type="file" class="form-control" id="immagine_post" name="immagine_post" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label for="data_pubblicazione" class="col-form-label">Seleziona una data</label>
+                            <input type="date" class="form-control" id="data_pubblicazione" name="data_pubblicazione" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hashtag" class="col-form-label">Aggiungi hashtags</label>
+                            <input type="text" class="form-control" id="hashtag" name="hashtags" placeholder="hashtag1, hashtag2, hashtag3">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-outline-light" data-bs-dismiss="modal">Chiudi</button>
+                            <button type="submit" class="btn btn-warning">Crea post</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

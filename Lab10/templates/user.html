@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block nav %}
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-light">Chi siamo</a>
+{% endblock %}
+
+{% block content %}
+    <div class="main p-2 bg-body-tertiary rounded-3 shadow mx-4">
+        <article class="articleclass col-12 d-flex flex-wrap">
+            <img class="profile_photo col-sm-6 col-md-5 col-lg-3" src="{{ p_user.immagine_profilo }}" alt="profile_photo">
+            <section class="sectionclass col-sm-5 col-md-6 col-lg-8">
+                <div>
+                    <div class="profile_info ml-2">
+                        <a class="profile" href="">@{{ p_user.username }}</a>
+                    </div>
+                </div>
+                <h1 class="m-2">{{ p_user.nome }}</h1>
+                <p class="paragraph mb-0">{{ p_user.bio }}</p>
+                <p class="hashtags mb-0">
+                    {% for hashtag in p_user.hashtags.split(',') %}
+                        <a href="#" class="btn btn-warning mb-1">#{{ hashtag.strip() }}</a>
+                    {% endfor %}
+                </p>
+            </section>
+        </article>
+    </div>
+    <div class="main m-4 bg-body-tertiary rounded-3 shadow">
+        <h1 class="purple m-2">Post di @{{ p_user.username }}</h1>
+    </div>
+    <div class="col-sm-12 px-4">
+        {% for post in posts %}
+            <div class="main p-2 bg-body-tertiary rounded-3 shadow">
+                <article class="articleclass col-12 d-flex flex-wrap">
+                    <div class="photo col-sm-12 col-md-6 col-lg-3">
+                        <a href="{{ url_for('post', post_id=post.id) }}" class="d-flex text-decoration-none">
+                            <img class="photo" src="{{ post.immagine_post }}" alt="post_photo">
+                        </a>
+                    </div>
+                    <section class="sectionclass col-sm-12 col-md-6 col-lg-9">
+                        <div>
+                            <div class="profile_info">
+                                <a class="profile text-decoration-none" href="{{ url_for('user', username=post.username) }}">
+                                    <img class="profile_photo" src="{{ post.immagine_profilo }}" alt="profile_photo">
+                                </a>
+                                <a class="profile text-decoration-none" href="{{ url_for('user', username=post.username) }}">@{{ post.username }}</a>
+                            </div>
+                            <p class="days">{{ post.data_pubblicazione|format_date }}</p>
+                        </div>
+                        <p class="paragraph mb-0">{{ post.testo }}</p>
+                        <p class="hashtags mb-0">
+                            {% for hashtag in post.hashtags.split(',') %}
+                                <a href="#" class="btn btn-warning mb-1">#{{ hashtag.strip() }}</a>
+                            {% endfor %}
+                        </p>
+                    </section>
+                </article>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

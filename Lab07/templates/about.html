@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Chi siamo{% endblock %}
+
+{% block nav %} 
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light">Home</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row p-4 align-items-center rounded-3 border shadow-lg mx-5 mb-5">
+        <div class="col-sm-12 col-lg-6 p-3 p-lg-5 pt-lg-3">
+            <h1 class="display-4 fw-bold lh-1 text-body-emphasis">Chi siamo</h1>
+            <p class="lead">Benvenuti su Hive! Siamo una piattaforma social ispirata alle cellette delle api, dove ogni individuo contribuisce a creare una grande e vibrante community. Il nostro obiettivo è connettere persone con interessi comuni, promuovendo la condivisione di idee e la creazione di nuove amicizie.</p>
+            <h1 class="display-4 fw-bold lh-1 text-body-emphasis">La nostra storia</h1>
+            <p class="lead">Hive è nata nel 2025 grazie alla visione di Stefano Tallone. La sua passione per la tecnologia e la comunicazione lo ha spinto a creare uno spazio dove le persone possano esprimersi liberamente e trovare una comunità accogliente. Con anni di esperienza nel settore, Stefano ha come obiettivo primario rendere Hive un luogo sicuro e divertente per tutti.</p>
+        </div>
+        <div class="col-sm-12 col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
+            <img class="img_ste rounded-lg-3" src="{{ url_for('static', filename='images/steudoc.JPG') }}" alt="profile_ste">
+        </div>
+    </div>
+{% endblock %}
+    
