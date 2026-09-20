@@ -1,4 +1,4 @@
-# Hive 🐝
+# Hive
 
 ![Hive Blog Banner](./cover.png)
 
